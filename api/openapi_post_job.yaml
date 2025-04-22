@@ -5,7 +5,7 @@ info:
   description: Submit new job postings to the internal database.
 
 servers:
-  - url: <Code Engine server>
+  - url: <Code Engine public endpoint>
     description: Remote server
 
 paths:
@@ -13,6 +13,8 @@ paths:
     post:
       summary: Submit a new job posting
       operationId: submitJob
+      tags:
+        - JobPosting
       requestBody:
         required: true
         content:
@@ -40,6 +42,8 @@ paths:
                   error:
                     type: string
                     example: Invalid JSON
+      security:
+        - NoAuth: []  # 👈 reference the dummy security scheme
 
 components:
   schemas:
@@ -66,3 +70,9 @@ components:
         creator_user:
           type: string
           example: alex.martin@example.com
+
+  securitySchemes:
+    NoAuth:           
+      type: http
+      scheme: bearer
+      description: No authentication required for this API.
