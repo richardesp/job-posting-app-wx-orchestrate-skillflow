@@ -1,0 +1,68 @@
+openapi: 3.0.3
+info:
+  title: Job Posting API
+  version: 1.0.0
+  description: Submit new job postings to the internal database.
+
+servers:
+  - url: <Code Engine server>
+    description: Remote server
+
+paths:
+  /jobs:
+    post:
+      summary: Submit a new job posting
+      operationId: submitJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobInput'
+      responses:
+        '201':
+          description: Job successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Job saved successfully
+        '400':
+          description: Invalid JSON format
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid JSON
+
+components:
+  schemas:
+    JobInput:
+      type: object
+      required:
+        - job_title
+        - experience
+        - description
+        - creator_user
+      properties:
+        job_title:
+          type: string
+          example: Cloud Solutions Architect
+        experience:
+          type: string
+          example: Senior
+        salary:
+          type: string
+          example: "120000"
+        description:
+          type: string
+          example: Design and implement cloud-native architectures for enterprise clients.
+        creator_user:
+          type: string
+          example: alex.martin@example.com
