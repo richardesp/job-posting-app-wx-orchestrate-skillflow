@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Job Board</title>
+  <title>Job Board Leaderboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <meta http-equiv="refresh" content="10"> <!-- Auto-refresh every 10 sec -->
   <style>
     .winner-badge {
       animation: pulse 1s infinite;
       color: gold;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
     }
 
     @keyframes pulse {
@@ -17,26 +17,57 @@
       50% { transform: scale(1.2); opacity: 0.7; }
       100% { transform: scale(1); opacity: 1; }
     }
+
+    .leaderboard {
+      background-color: #fffbe6;
+      border-left: 5px solid gold;
+    }
+
+    .card-rank {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #6c757d;
+    }
   </style>
 </head>
 <body class="bg-light text-dark">
 
 <div class="container py-5">
-  <h1 class="mb-4 text-primary">🚀 Internal Job Board</h1>
+  <h1 class="mb-4 text-primary">🚀 Internal Job Board Competition</h1>
 
   {% if jobs %}
+    <!-- Leaderboard Section -->
+    <div class="mb-5 leaderboard p-4 rounded shadow-sm">
+      <h3 class="text-warning">🏆 Leaderboard</h3>
+      <ol class="mb-0">
+        {% for job in jobs[:3] %}
+          <li>
+            <strong>{{ job.creator_user or "Anonymous" }}</strong> – 
+            "{{ job.job_title | truncate(30) }}" 
+            {% if loop.index == 1 %}<span class="winner-badge">🥇</span>{% endif %}
+            {% if loop.index == 2 %}🥈{% endif %}
+            {% if loop.index == 3 %}🥉{% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+
+    <!-- Job Listings -->
     <div class="row row-cols-1 row-cols-md-2 g-4">
       {% for job in jobs %}
       <div class="col">
         <div class="card h-100 shadow-sm">
           <div class="card-body">
-            <h5 class="card-title">
-              {{ job.job_title }}
-              {% if loop.index <= 1 %}
-                <span class="winner-badge">🥇</span>
-              {% endif %}
-            </h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ job.experience }} Level</h6>
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title mb-0">
+                {{ job.job_title }}
+                {% if loop.index == 1 %}
+                  <span class="winner-badge">🥇</span>
+                {% endif %}
+              </h5>
+              <div class="card-rank">#{{ loop.index }}</div>
+            </div>
+            <h6 class="card-subtitle mt-2 mb-2 text-muted">{{ job.experience }} Level</h6>
             <p class="card-text">{{ job.description }}</p>
             {% if job.salary %}
               <p class="card-text"><strong>Salary:</strong> {{ job.salary }}</p>
@@ -50,7 +81,7 @@
       {% endfor %}
     </div>
   {% else %}
-    <div class="alert alert-info">No jobs posted yet. 🎯</div>
+    <div class="alert alert-info">No jobs posted yet. Be the first! 🚀</div>
   {% endif %}
 </div>
 
