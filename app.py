@@ -7,11 +7,11 @@ import os
 
 app = Flask(__name__)
 
-DB_URL = "sqlite:///jobs.db"
+DB_URL = os.environ.get("DB_URL")
 ADMIN_USER = os.environ.get("ADMIN_USER")
 ADMIN_PASS = os.environ.get("ADMIN_PASS")
 
-engine = create_engine(DB_URL)
+engine = create_engine(DB_URL, connect_args={"sslmode": "require"})
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
